@@ -31,7 +31,7 @@
 
 import handler from "./api/promotion.js";
 
-// Simulate a fake req/res (like Postman)
+
 const fakeReq = {
   method: "POST",
   body: {

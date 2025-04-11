@@ -59,45 +59,55 @@ export default async function handler(req, res) {
   const { method, query, body } = req;
 
   try {
-    if (method === "POST") {
-      const { error } = createPromotionSchema.validate(body);
-      if (error) return responseHandler(res, 400, `Validation Error: ${error.message}`);
-      
-      const promotion = await Promotion.create(body);
-      return responseHandler(res, 201, "Promotion created", promotion);
-    }
-
     if (method === "GET") {
-      if (query.id) {
-        const promo = await Promotion.findById(query.id);
-        return promo
-          ? responseHandler(res, 200, "Promotion found", promo)
-          : responseHandler(res, 404, "Promotion not found");
-      }
-      const promos = await Promotion.find({});
-      return responseHandler(res, 200, "All promotions retrieved", promos);
-    }
+          if (query.id) {
+            const promo = await Promotion.findById(query.id);
+            return promo
+              ? responseHandler(res, 200, "Promotion found", promo)
+              : responseHandler(res, 404, "Promotion not found");
+          }
+          const promos = await Promotion.find({});
+          return responseHandler(res, 200, "All promotions retrieved", promos);
+        }
+    // if (method === "POST") {
+    //   const { error } = createPromotionSchema.validate(body);
+    //   if (error) return responseHandler(res, 400, `Validation Error: ${error.message}`);
+      
+    //   const promotion = await Promotion.create(body);
+    //   return responseHandler(res, 201, "Promotion created", promotion);
+    // }
 
-    if (method === "PUT") {
-      if (!query.id) return responseHandler(res, 400, "Promotion ID required for update");
+    // if (method === "GET") {
+    //   if (query.id) {
+    //     const promo = await Promotion.findById(query.id);
+    //     return promo
+    //       ? responseHandler(res, 200, "Promotion found", promo)
+    //       : responseHandler(res, 404, "Promotion not found");
+    //   }
+    //   const promos = await Promotion.find({});
+    //   return responseHandler(res, 200, "All promotions retrieved", promos);
+    // }
 
-      const { error } = editPromotionSchema.validate(body);
-      if (error) return responseHandler(res, 400, `Validation Error: ${error.message}`);
+    // if (method === "PUT") {
+    //   if (!query.id) return responseHandler(res, 400, "Promotion ID required for update");
 
-      const updated = await Promotion.findByIdAndUpdate(query.id, body, { new: true });
-      return updated
-        ? responseHandler(res, 200, "Promotion updated", updated)
-        : responseHandler(res, 404, "Promotion not found");
-    }
+    //   const { error } = editPromotionSchema.validate(body);
+    //   if (error) return responseHandler(res, 400, `Validation Error: ${error.message}`);
 
-    if (method === "DELETE") {
-      if (!query.id) return responseHandler(res, 400, "Promotion ID required for delete");
+    //   const updated = await Promotion.findByIdAndUpdate(query.id, body, { new: true });
+    //   return updated
+    //     ? responseHandler(res, 200, "Promotion updated", updated)
+    //     : responseHandler(res, 404, "Promotion not found");
+    // }
 
-      const deleted = await Promotion.findByIdAndDelete(query.id);
-      return deleted
-        ? responseHandler(res, 200, "Promotion deleted", deleted)
-        : responseHandler(res, 404, "Promotion not found");
-    }
+    // if (method === "DELETE") {
+    //   if (!query.id) return responseHandler(res, 400, "Promotion ID required for delete");
+
+    //   const deleted = await Promotion.findByIdAndDelete(query.id);
+    //   return deleted
+    //     ? responseHandler(res, 200, "Promotion deleted", deleted)
+    //     : responseHandler(res, 404, "Promotion not found");
+    // }
 
     return responseHandler(res, 405, "Method Not Allowed");
   } catch (err) {
