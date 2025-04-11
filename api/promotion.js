@@ -60,32 +60,26 @@ export default async function handler(req, res) {
 
   try {
     if (method === "GET") {
-          if (query.id) {
-            const promo = await Promotion.findById(query.id);
-            return promo
-              ? responseHandler(res, 200, "Promotion found", promo)
-              : responseHandler(res, 404, "Promotion not found");
+        if (req.method !== "POST") {
+            return res.status(405).json({ error: "Method Not Allowed" });
           }
-          const promos = await Promotion.find({});
-          return responseHandler(res, 200, "All promotions retrieved", promos);
+        
+        //   if (query.id) {
+        //     const promo = await Promotion.findById(query.id);
+        //     return promo
+        //       ? responseHandler(res, 200, "Promotion found", promo)
+        //       : responseHandler(res, 404, "Promotion not found");
+        //   }
+        //   const promos = await Promotion.find({});
+        //   return responseHandler(res, 200, "All promotions retrieved", promos);
         }
-    if (method === "POST") {
+        
+    else if (method === "POST") {
       const { error } = createPromotionSchema.validate(body);
       if (error) return responseHandler(res, 400, `Validation Error: ${error.message}`);
       
       const promotion = await Promotion.create(body);
       return responseHandler(res, 201, "Promotion created", promotion);
-    }
-
-    if (method === "GET") {
-      if (query.id) {
-        const promo = await Promotion.findById(query.id);
-        return promo
-          ? responseHandler(res, 200, "Promotion found", promo)
-          : responseHandler(res, 404, "Promotion not found");
-      }
-      const promos = await Promotion.find({});
-      return responseHandler(res, 200, "All promotions retrieved", promos);
     }
 
     if (method === "PUT") {
