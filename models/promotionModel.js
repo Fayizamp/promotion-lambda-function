@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 const promotionSchema = new mongoose.Schema({
   title: String,
   description: String,
@@ -16,8 +18,9 @@ const promotionSchema = new mongoose.Schema({
   }
 }, { 
     timestamps: true,
-});
+ });
 
-export default function PromotionModel(conn) {
+
+ export default function PromotionModel(conn) {
   return conn.models.Promotion || conn.model('Promotion', promotionSchema);
 }
