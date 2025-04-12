@@ -9,12 +9,15 @@ export default async function connectDB(projectName){
     return res.json({ error: "project ame is required" });
    }
 
-   const db = `${process.env.MONGO_URI}${projectName}`
+   const db = `${process.env.MONGO_URI}${projectName}?retryWrites=true&w=majority`
 
    if(connection[projectName]){
     return connection[projectName]
    }
-   const conn = await mongoose.createConnection(db)
+   const conn = await mongoose.createConnection(db, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    }).asPromise();
 
    connection[projectName] == conn;
    return conn;
