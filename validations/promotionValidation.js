@@ -1,15 +1,4 @@
-// import Joi from 'joi';
 
-// export const createPromotionSchema = Joi.object({
-//   title: Joi.string().required(),
-//   description: Joi.string().required(),
-//   type: Joi.string().valid("banner", "video", "poster", "notice").required(),
-//   startDate: Joi.date().required(),
-//   endDate: Joi.date().required(),
-//   media: Joi.string().uri().required(),
-//   link: Joi.string().uri().optional(),
-//   status: Joi.string().valid("active", "experied").optional(),
-// });
 
 
 import Joi from 'joi';
