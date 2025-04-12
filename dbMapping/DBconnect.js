@@ -10,7 +10,7 @@ export default async function connectDB(projectName){
     throw new Error("Project name is required");
    }
 
-   const db = `${process.env.MONGO_URI}/${projectName}?retryWrites=true&w=majority`
+   const db = `${process.env.MONGO_URI}${projectName}?retryWrites=true&w=majority`
 //    console.log(db);
    
 
