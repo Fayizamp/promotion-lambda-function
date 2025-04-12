@@ -5,6 +5,7 @@ import responseHandler from '../helpers/responseHandler.js';
 import { createPromotionSchema, editPromotionSchema } from '../validations/promotionValidation.js';
 // import dotenv from "dotenv";
 import connectDB from '../dbMapping/DBconnect.js';
+import PromotionModel from '../models/promotionModel.js';
 
 // dotenv.config();
 // const uri = process.env.MONGO_URI;
