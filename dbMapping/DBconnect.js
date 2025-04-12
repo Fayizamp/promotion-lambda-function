@@ -9,13 +9,15 @@ export default async function connectDB(projectName){
    if(!projectName){
     throw new Error("Project name is required");
    }
-   const baseUri = process.env.MONGO_URI.endsWith('/') 
-   ? process.env.MONGO_URI 
-   : `${process.env.MONGO_URI}/`;
+//    const baseUri = process.env.MONGO_URI.endsWith('/') 
+//    ? process.env.MONGO_URI 
+//    : `${process.env.MONGO_URI}/`;
  
- const db = `${baseUri}${projectName}?retryWrites=true&w=majority`;
-//  const db = `${process.env.MONGO_URI}${projectName}?retryWrites=true&w=majority`
+//  const db = `${baseUri}${projectName}?retryWrites=true&w=majority`;
+const baseUri = process.env.MONGO_URI.replace(/\/$/, '');
 
+ const db = `${baseUri}/${projectName}?retryWrites=true&w=majority`;
+ 
    if(connection[projectName]){
     return connection[projectName]
    }
