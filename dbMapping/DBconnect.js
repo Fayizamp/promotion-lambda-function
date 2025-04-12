@@ -6,7 +6,7 @@ const connection ={}
 
 export default async function connectDB(projectName){
    if(!projectName){
-    return res.json({ error: "project ame is required" });
+    throw new Error("Project name is required");
    }
 
    const db = `${process.env.MONGO_URI}${projectName}?retryWrites=true&w=majority`
@@ -19,6 +19,6 @@ export default async function connectDB(projectName){
         useUnifiedTopology: true,
     }).asPromise();
 
-   connection[projectName] == conn;
+   connection[projectName] = conn;
    return conn;
 }

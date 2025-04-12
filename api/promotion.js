@@ -61,8 +61,6 @@ export default async function handler(req, res) {
         : responseHandler(res, 404, "Promotion not found");
     }
 
-   
-    
     if (method === "DELETE") {
       if (!id) return responseHandler(res, 400, "Promotion ID required for delete");
 
