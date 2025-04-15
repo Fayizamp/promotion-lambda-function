@@ -4,7 +4,7 @@ import productSchema from "../models/productModel.js";
 
 
 export default async function handler(req, res){
-    const { project } = req.query;
+    const { project ,_id} = req.query;
 
     if(!project){
         return responseHandler(res,400,"project Name required");
@@ -22,14 +22,16 @@ export default async function handler(req, res){
             return responseHandler(res, 200, "product fetched successfully", product)
         }
         else if(req.method === 'PUT'){
-            const {_id,...upData} = req.body;
+            const upData = { ...req.body };
+
+            // const {_id,...upData} = req.body;
             if (!_id) return responseHandler(res, 400, "Product id is required");
             const upProduct = await Product.findByIdAndUpdate(_id,upData, {new: true});
             return responseHandler(res, 200, "product updated successfully", upProduct)
 
         }
         else if (req.method === "DELETE") {
-            const { _id } = req.body;
+            // const { _id } = req.body;
             if (!_id) return responseHandler(res, 400, "Product _id is required")
             const delProduct = await Product.findByIdAndDelete(_id)
             return responseHandler(res, 200, "Product deleted", delProduct);
