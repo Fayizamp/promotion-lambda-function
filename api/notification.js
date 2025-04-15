@@ -12,7 +12,6 @@ export default async function handler(req, res) {
   const action = query.action || "";
 
   try {
-    // CREATE NOTIFICATION
     if (method === "POST" && action === "create") {
       const { error } = createNotificationSchema.validate(body, { abortEarly: true })
       if (error) return responseHandler(res, 400, `Invalid input: ${error.message}`);
