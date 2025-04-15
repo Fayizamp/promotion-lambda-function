@@ -1,4 +1,4 @@
-import connectDB from "../dbMapping/DBconnect.js";
+import connectDB from '../dbMapping/DBconnect.js';
 import responseHandler from "../helpers/responseHandler.js";
 import productSchema from "../models/productModel.js";
 

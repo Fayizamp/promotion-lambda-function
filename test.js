@@ -28,29 +28,37 @@
 
 // handler(mockReq, mockRes);
 
+import handler from './api/product.js';
 
-import handler from "./api/promotion.js";
-
-
-const fakeReq = {
+// Mock Request and Response
+const mockRequest = {
   method: "POST",
   body: {
-    title: "Test Promo",
-    description: "Testing full CRUD",
-    type: "banner",
-    startDate: new Date(),
-    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    media: "https://example.com/promo.jpg",
-    link: "https://example.com",
-    status: "active"
+    projectName: "kssia",
+    name: "Sample Product",
+    price: 100,
+    offerPrice: 90,
+    description: "A cool product",
+    moq: 10,
+    units: "pcs",
+    tags: ["cool", "new"],
+    status: "pending",
+    reason: "",
   },
   query: {}
 };
 
-const fakeRes = {
-  status: (code) => ({
-    json: (data) => console.log("Response:", { statusCode: code, ...data }),
-  }),
+const mockResponse = {
+  status(statusCode) {
+    this.statusCode = statusCode;
+    return this;
+  },
+  json(data) {
+    console.log("Response:", {
+      status: this.statusCode,
+      ...data,
+    });
+  },
 };
 
-handler(fakeReq, fakeRes);
+handler(mockRequest, mockResponse);
