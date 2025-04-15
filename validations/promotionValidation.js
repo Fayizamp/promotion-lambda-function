@@ -24,3 +24,18 @@ export const editPromotionSchema = Joi.object({
   link: Joi.string().uri(),
   status: Joi.string().valid("active", "inactive"),
 });
+
+export const createNotificationSchema = Joi.object({
+  users: Joi.array().items(
+    Joi.object({
+      user: Joi.alternatives().try(Joi.string().required(), Joi.valid("*"))
+    })
+  ).min(1).required(),
+
+  type: Joi.string().valid("email", "in-app").required(),
+
+  subject: Joi.string().required(),
+  content: Joi.string().required(),
+  media: Joi.string().optional(),
+  link: Joi.string().optional(),
+});

@@ -33,10 +33,12 @@ export default async function handler(req, res){
         else if (req.method === "DELETE") {
             // const { _id } = req.body;
             if (!_id) return responseHandler(res, 400, "Product _id is required")
-            const delProduct = await Product.findByIdAndDelete(_id)
+            const delProduct = await Product.findByIdAndDelete(_id);
+            if(!delProduct){
+                return responseHandler(res, 404, "product is not found")
+            }
             return responseHandler(res, 200, "Product deleted", delProduct);
           }
-
           else{
             return responseHandler(res, 405, "Method not allowed")
           }
