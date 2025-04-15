@@ -7,7 +7,7 @@ export default async function handler(req, res){
     const { project } = req.query;
 
     if(!project){
-        return responseHandler(res,400,"projectName required");
+        return responseHandler(res,400,"project Name required");
     }
     try {
         const conn = await connectDB(project);
@@ -15,7 +15,7 @@ export default async function handler(req, res){
 
         if(req.method === "POST"){
             const product = await Product.create(req.body);
-            return responseHandler( res,201," preduct created successfully", product )
+            return responseHandler( res,201," product created successfully", product )
         }
         else if(req.method === 'GET'){
             const product = await Product.find();
