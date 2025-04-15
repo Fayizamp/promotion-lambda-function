@@ -68,7 +68,7 @@ import sendMail from "./utils/sendMail.js";
 const run = async () => {
   try {
     await sendMail({
-      to: "receiver@gmail.com",
+      to: "fayizamp11@gmail.com",
       subject: "📧 Local Test Email",
       text: "This is a local test email using Nodemailer with Gmail App Password!",
       attachments: [
