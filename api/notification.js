@@ -2,7 +2,6 @@ import connectDB from "../dbMapping/DBconnect.js";
 import Notification from "../models/notificationModel.js";
 import User from "../models/userModel.js";
 import sendMail from "../utils/sendMail.js";
-import sendInAppNotification from "../utils/sendInAppNotification.js";
 import { createNotificationSchema } from "../validations/promotionValidation.js";
 import responseHandler from "../helpers/responseHandler.js";
 
@@ -13,45 +12,34 @@ export default async function handler(req, res) {
 
   try {
     if (method === "POST" && action === "create") {
-      const { error } = createNotificationSchema.validate(body, { abortEarly: true })
+      const { error } = createNotificationSchema.validate(body, { abortEarly: true });
       if (error) return responseHandler(res, 400, `Invalid input: ${error.message}`);
 
       let { users, media } = body;
 
       if (users[0].user === "*") {
-        const allUsers = await User.find({ status: { $in: ["active", "awaiting_payment"] } })
+        const allUsers = await User.find({ status: { $in: ["active", "awaiting_payment"] } });
         users = allUsers.map((u) => ({ user: u._id }));
       }
 
-      // Send Email
-      if (body.type === "email") {
-        const emails = [];
-        for (const { user } of users) {
-          const found = await User.findById(user);
-          if (found?.email) emails.push(found.email);
-        }
-
-        const attachments = media ?
-         [{ filename: media.split("/").pop(), path: media }] : 
-         [];
-
-        await sendMail({
-          to: emails,
-          subject: body.subject,
-          text: body.content,
-          attachments,
-          link: body.link,
-        });
-
-      } else if (body.type === "in-app") {
-        const fcms = [];
-        for (const { user } of users) {
-          const found = await User.findById(user);
-          if (found?.fcm) fcms.push(found.fcm);
-        }
-
-        await sendInAppNotification(fcms, body.subject, body.content, media);
+      // Only Email Notifications
+      const emails = [];
+      for (const { user } of users) {
+        const found = await User.findById(user);
+        if (found?.email) emails.push(found.email);
       }
+
+      const attachments = media
+        ? [{ filename: media.split("/").pop(), path: media }]
+        : [];
+
+      await sendMail({
+        to: emails,
+        subject: body.subject,
+        text: body.content,
+        attachments,
+        link: body.link,
+      });
 
       body.users = users;
       body.senderModel = "Admin";

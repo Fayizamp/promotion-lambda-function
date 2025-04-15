@@ -1,8 +1,9 @@
-
-const { NODE_EMAIL_ID, NODE_PASS = "aooa ipwd cqts uyoz" } = process.env;
-import nodemailer from "nodemailer"
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config(); 
+
+import nodemailer from "nodemailer";
+
+const { NODE_EMAIL_ID, NODE_PASS } = process.env;
 
 const sendMail = async (data) => {
   try {
@@ -19,7 +20,7 @@ const sendMail = async (data) => {
       to: data.to,
       subject: data.subject,
       text: data.text,
-      attachments: data.attachments,
+      attachments: data.attachments || [],
     };
 
     transporter.sendMail(mailOptions, function (error, info) {

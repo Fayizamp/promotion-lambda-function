@@ -64,31 +64,26 @@
 // handler(mockRequest, mockResponse);
 
 import sendMail from "./utils/sendMail.js";
-import sendInAppNotification from "./utils/sendInAppNotification.js";
 
 const run = async () => {
-  // === Test Email ===
-  await sendMail({
-    to: "receiver@gmail.com",
-    subject: "📧 Local Test Email",
-    text: "This is a local test email using Nodemailer!",
-    attachments: [
-      {
-        filename: "sample.txt",
-        path: "./sample.txt",
-      },
-    ],
-  });
+  try {
+    await sendMail({
+      to: "receiver@gmail.com",
+      subject: "📧 Local Test Email",
+      text: "This is a local test email using Nodemailer with Gmail App Password!",
+      attachments: [
+        {
+          filename: "sample.txt", 
+          path: "./sample.txt",
+        },
+      ],
+    });
 
-  // === Test In-App Notification ===
-  await sendInAppNotification(
-    ["YOUR_TEST_FCM_TOKEN"],
-    "🔔 Local In-App Test",
-    "This is a test push notification!",
-    null, // or image URL
-    "notifications",
-    "12345" // optional ID
-  );
+    console.log(" Email test complete.");
+  } catch (err) {
+    console.error("Error during test email:", err.message);
+  }
 };
 
 run();
+
