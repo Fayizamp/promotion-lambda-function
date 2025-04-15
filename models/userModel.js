@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const linkSchema = new mongoose.Schema(
   {
@@ -67,7 +67,6 @@ const userSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
+export default User;
