@@ -1,21 +1,11 @@
 
-// import mongoose from 'mongoose';
-// import Promotion from '../models/promotionModel.js';
 import responseHandler from '../helpers/responseHandler.js';
 import { createPromotionSchema, editPromotionSchema } from '../validations/promotionValidation.js';
 // import dotenv from "dotenv";
 import connectDB from '../dbMapping/DBconnect.js';
 import PromotionModel from '../models/promotionModel.js';
 
-// dotenv.config();
-// const uri = process.env.MONGO_URI;
 
-// let conn = null;
-// async function connectToDB() {
-//   if (!conn) {
-//     conn = await mongoose.connect(uri);
-//   }
-// }
 
 
 export default async function handler(req, res) {
