@@ -4,13 +4,13 @@ import productSchema from "../models/productModel.js";
 
 
 export default async function handler(req, res){
-    const {projectName} = req.method == "GET" ? req.query : req.body;
+    const { project } = req.query;
 
-    if(!projectName){
+    if(!project){
         return responseHandler(res,400,"projectName required");
     }
     try {
-        const conn = await connectDB(projectName);
+        const conn = await connectDB(project);
         const Product = conn.models.Product || conn.model("Product", productSchema);
 
         if(req.method === "POST"){
