@@ -1,6 +1,6 @@
-import connectDB from "../dbMapping/DBconnect";
-import responseHandler from "../helpers/responseHandler";
-import productSchema from "../models/productModel";
+import connectDB from "../dbMapping/DBconnect.js";
+import responseHandler from "../helpers/responseHandler.js";
+import productSchema from "../models/productModel.js";
 
 
 export default async function handler(req, res){
