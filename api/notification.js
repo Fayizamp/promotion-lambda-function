@@ -1,16 +1,21 @@
 import connectDB from "../dbMapping/DBconnect.js";
-import Notification from "../models/notificationModel.js";
-import User from "../models/userModel.js";
+import NotificationModel from "../models/notificationModel.js";
+import UserModel from "../models/userModel.js";
 import sendMail from "../utils/sendMail.js";
 import { createNotificationSchema } from "../validations/promotionValidation.js";
 import responseHandler from "../helpers/responseHandler.js";
 
 export default async function handler(req, res) {
-  await connectDB(req, res);
   const { method, query, body } = req;
-  const action = query.action || "";
+  const { project, action = "" } = query;
+
+  if (!project) return responseHandler(res, 400, "Project name is required");
 
   try {
+    const conn = await connectDB(project);
+    const Notification = NotificationModel(conn);
+    const User = UserModel(conn);
+
     if (method === "POST" && action === "create") {
       const { error } = createNotificationSchema.validate(body, { abortEarly: true });
       if (error) return responseHandler(res, 400, `Invalid input: ${error.message}`);
@@ -22,7 +27,6 @@ export default async function handler(req, res) {
         users = allUsers.map((u) => ({ user: u._id }));
       }
 
-      // Only Email Notifications
       const emails = [];
       for (const { user } of users) {
         const found = await User.findById(user);
@@ -68,7 +72,6 @@ export default async function handler(req, res) {
         .limit(Number(limit));
 
       const count = await Notification.countDocuments();
-
       return responseHandler(res, 200, "Notifications fetched", data, count);
     }
 
@@ -83,9 +86,7 @@ export default async function handler(req, res) {
 
       if (userNotifications.length > 0) {
         await Notification.updateMany(
-          {
-            users: { $elemMatch: { user: userId, read: false } },
-          },
+          { users: { $elemMatch: { user: userId, read: false } } },
           { $set: { "users.$.read": true } }
         );
       }
