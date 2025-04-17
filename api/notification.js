@@ -16,27 +16,68 @@ export default async function handler(req, res) {
     const Notification = NotificationModel(conn);
     const User = UserModel(conn);
 
+    // if (method === "POST" && action === "create") {
+    //   const { error } = createNotificationSchema.validate(body, { abortEarly: true });
+    //   if (error) return responseHandler(res, 400, `Invalid input: ${error.message}`);
+
+    //   let { users, media } = body;
+
+    //   if (users[0].user === "*") {
+    //     const allUsers = await User.find({ status: { $in: ["active", "awaiting_payment"] } });
+    //     users = allUsers.map((u) => ({ user: u._id }));
+    //   }
+
+    //   const emails = [];
+    //   for (const { user } of users) {
+    //     const found = await User.findById(user);
+    //     if (found?.email) emails.push(found.email);
+    //   }
+
+    //   const attachments = media
+    //     ? [{ filename: media.split("/").pop(), path: media }]
+    //     : [];
+
+    //   await sendMail({
+    //     to: emails,
+    //     subject: body.subject,
+    //     text: body.content,
+    //     attachments,
+    //     link: body.link,
+    //   });
+
+    //   body.users = users;
+    //   body.senderModel = "Admin";
+    //   body.sender = req.userId;
+
+    //   const created = await Notification.create(body);
+    //   return responseHandler(res, 200, "Notification created", created);
+    // }
+
     if (method === "POST" && action === "create") {
       const { error } = createNotificationSchema.validate(body, { abortEarly: true });
       if (error) return responseHandler(res, 400, `Invalid input: ${error.message}`);
-
+    
       let { users, media } = body;
-
-      if (users[0].user === "*") {
-        const allUsers = await User.find({ status: { $in: ["active", "awaiting_payment"] } });
-        users = allUsers.map((u) => ({ user: u._id }));
-      }
-
       const emails = [];
-      for (const { user } of users) {
-        const found = await User.findById(user);
-        if (found?.email) emails.push(found.email);
+    
+      if (users[0].user === "*") {
+        const allUsers = await User.find({ status: { $in: ["active", "awaiting_payment"] }, email: { $exists: true, $ne: null } });
+        
+        // Set users directly from allUsers
+        users = allUsers.map((u) => ({ user: u._id }));
+        emails.push(...allUsers.map(u => u.email));
+      } else {
+        // Loop through users to fetch their emails
+        for (const { user } of users) {
+          const found = await User.findById(user);
+          if (found?.email) emails.push(found.email);
+        }
       }
-
+    
       const attachments = media
         ? [{ filename: media.split("/").pop(), path: media }]
         : [];
-
+    
       await sendMail({
         to: emails,
         subject: body.subject,
@@ -44,15 +85,16 @@ export default async function handler(req, res) {
         attachments,
         link: body.link,
       });
-
+    
       body.users = users;
       body.senderModel = "Admin";
       body.sender = req.userId;
-
+    
       const created = await Notification.create(body);
       return responseHandler(res, 200, "Notification created", created);
     }
 
+    
     if (method === "GET" && query.id) {
       const notification = await Notification.findById(query.id)
         .populate("users.user", "name")
